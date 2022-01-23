@@ -1,0 +1,9 @@
+,atricle,original p_value,better group survival,alpha tested,max intervals tries, alpha rejection on interval,p_value rejection,greedy algo disagree with efficient algo on interval,the p_value when disagreement,link
+0,example data set,0.0285,A,0.05,20,2,0.0734,11.0,0.9874,None
+1,Combination Anastrozole and Fulvestrant in Metastatic Breast Cancert,0.009,2,0.05,20,8,0.0561,,,https://www.nejm.org/doi/full/10.1056/nejmoa1201622
+2,Long-Term Outcomes of Patent Foramen Ovale Closure or Medical Therapy after Stroke,0.048,1,0.05,20,1,0.0932,13.0,0.9827,https://www.nejm.org/doi/full/10.1056/NEJMoa1610057
+3,Overall Survival with Ribociclib plus Endocrine Therapy in Breast Cancer,0.0184,1,0.05,20,3,0.0534,19.0,0.9486,https://www.nejm.org/doi/full/10.1056/NEJMoa1903765
+4,Overall Survival with Ribociclib plus Endocrine Therapy in Breast Cancer,0.0184,1,0.05,20,3,0.0534,19.0,0.9486,https://www.nejm.org/doi/full/10.1056/NEJMoa1903765
+5,Long-Term Outcomes of Patent Foramen Ovale Closure or Medical Therapy after Stroke,0.009,2,0.05,20,8,0.0561,,,https://www.nejm.org/doi/full/10.1056/nejmoa1201622
+6,Long-Term Outcomes of Patent Foramen Ovale Closure or Medical Therapy after Stroke,0.009,2,0.05,20,8,0.0561,,,https://www.nejm.org/doi/full/10.1056/nejmoa1201622
+0,Long-Term Outcomes of Patent Foramen Ovale Closure or Medical Therapy after Stroke,0.009,2,0.05,20,8,0.0561,,,https://www.nejm.org/doi/full/10.1056/nejmoa1201622

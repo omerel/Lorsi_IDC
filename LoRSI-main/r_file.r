@@ -9,8 +9,8 @@ arm.id<-2 #arm indicator/ Group
 digizeit<- read.csv("b.csv", header = FALSE)
 file_name<-"g2.csv"
 t.risk<- seq(0, 9, by = 1)
-n.risk<- c(449,476,464,447,421,352,262,197,128,77,41)
-#n.risk<- c(481,433,394,380,354,282,218,150,104,59,31)
+#n.risk<- c(449,476,464,447,421,352,262,197,128,77)#,41)
+n.risk<- c(481,433,394,380,354,282,218,150,104,59)#,31)
 
 ###END FUNCTION INPUTS
 #Read in survival times read by digizeit
