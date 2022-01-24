@@ -387,7 +387,7 @@ class LoRSI():
         plt.title('Time Running griddy VS Efficient')
         return df_comparison,chosen_indexes,number_of_changes_result,p_value_max_result
     
-    def explore_alpha_rejection_null_hypothesis(self,max_number_of_changes=10,alpha=0.05, method='griddy', parallel=True):
+    def explore_alpha_rejection_null_hypothesis(self,max_number_of_changes=10,delta=0.05, method='griddy', parallel=True):
         rejected= False
         columns = ['Number_of_changes','MIN_pvalue','MAX_pvalue']
         df = pd.DataFrame(columns=columns)
@@ -395,21 +395,23 @@ class LoRSI():
             original_pvalue, min_pvalue, max_pvalue, _ = self.calc_interval(number_of_changes,delta=0, delta_model='RIGHT', method=method, parallel=parallel,print_results=False)
             df_temp = pd.DataFrame([[number_of_changes,min_pvalue, max_pvalue[0]]],columns=columns) 
             df = df.append(df_temp)
-            #  if we got value higher tham alpha rejectionn break the search
-            if max_pvalue[0] > alpha:
+            #  if we got value higher than delta rejectionn break the search
+            if max_pvalue[0] > delta:
                 rejected = True
                 break
         if rejected:
-            print(f"On number_of_changes={number_of_changes} and alpha={alpha}. The null hypothes is rejected")
+            print(f"On number_of_changes={number_of_changes} and delta={delta}. The null hypothes is rejected. alpha= {round(number_of_changes/len(self.data),4)}")
             number_of_changes_results=number_of_changes # for history report
+            alpha = round(number_of_changes/len(self.data),4)
         else:
-            print(f"On number_of_changes={number_of_changes} and alpha={alpha}. The null hypothes not rejected")
+            print(f"On number_of_changes={number_of_changes} and delta={delta}. The null hypothes not rejected")
             number_of_changes_results=None # for history report
+            alpha = None
         df = df.reset_index()
         df = df.drop(columns='index')
         display(df.style.apply(self._highlight_rejection,axis=1))
         print(f"ORIGINAL P-vlaue: {original_pvalue:.4f}")
-        return df,number_of_changes_results,round(max_pvalue[0],4)
+        return df,number_of_changes_results,round(max_pvalue[0],4),alpha
 
     
     def _highlight_rejection(self,row):    
@@ -422,30 +424,30 @@ class LoRSI():
             return [default,default,default]
             
 
-    def run(self,report_name="",atricle="None",link="None",max_number_of_changes=20,alpha=0.05):
+    def run(self,report_name="",atricle="None",link="None",max_number_of_changes=20,delta=0.05):
         # create report
         display(Markdown(f'# Log Rank Stability Interval Report'))
         display(Markdown(f'### Article: {atricle}'))
         display(Markdown(f'### Link: {link}'))
         display(Markdown(f'## KM Plot'))
         p_value, better_group = self.plot_original_KM()
-        display(Markdown(f'## Explore alpha rejection'))
-        df_find_alpha,number_of_changes_results,max_p_value = self.explore_alpha_rejection_null_hypothesis(max_number_of_changes=max_number_of_changes,
-                                                            alpha=alpha,
+        display(Markdown(f'## Explore delta rejection'))
+        df_find_alpha,number_of_changes_results,max_p_value,alpha = self.explore_alpha_rejection_null_hypothesis(max_number_of_changes=max_number_of_changes,
+                                                            delta=delta,
                                                             method='efficient',
                                                             parallel=True)
         display(Markdown(f'## Compare time calculation between efficient and griddy methods'))
         df_time_compare,chosen_indexes,number_of_changes_c_results,max_p_value_c= self.compare_methods(max_intervals=max_number_of_changes,parallel=True)
 
         # save values to history
-        columns = ['atricle','original p_value','better group survival','alpha tested','max intervals tries',' alpha rejection on interval','p_value rejection','greedy algo disagree with efficient algo on interval','the p_value when disagreement','link']
+        columns = ['atricle','original p_value','better group survival','delta tested','max intervals tries',' k rejection on interval','alpha','p_value rejection','greedy algo disagree with efficient algo on interval','the p_value when disagreement','link']
         # df_final = pd.DataFrame(columns=columns)
         if os.path.isfile('reports/report.csv'):
             df_final = pd.read_csv('reports/report.csv')
             df_final = df_final.drop(columns='Unnamed: 0')
         else:
             df_final = pd.DataFrame(columns=columns)
-        df_temp = pd.DataFrame([[atricle,round(p_value,4),better_group,alpha,max_number_of_changes,number_of_changes_results,max_p_value,number_of_changes_c_results,max_p_value_c,link]],columns=columns) 
+        df_temp = pd.DataFrame([[atricle,round(p_value,4),better_group,delta,max_number_of_changes,number_of_changes_results,alpha,max_p_value,number_of_changes_c_results,max_p_value_c,link]],columns=columns) 
         df_final = df_final.append(df_temp)
         df_final.to_csv('reports/report.csv')
 
