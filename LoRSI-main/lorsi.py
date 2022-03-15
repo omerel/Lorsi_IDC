@@ -424,11 +424,11 @@ class LoRSI():
             return [default,default,default]
             
 
-    def run(self,report_name="",atricle="None",link="None",max_number_of_changes=20,delta=0.05):
+    def run(self,report_name="",atricle="None",link="None",max_number_of_changes=20,delta=0.05,cites='None',save_report=False):
         # create report
         display(Markdown(f'# Log Rank Stability Interval Report'))
         display(Markdown(f'### Article: {atricle}'))
-        display(Markdown(f'### Link: {link}'))
+        display(Markdown(f'### Link: {link}')) 
         display(Markdown(f'## KM Plot'))
         p_value, better_group = self.plot_original_KM()
         display(Markdown(f'## Explore delta rejection'))
@@ -439,18 +439,17 @@ class LoRSI():
         display(Markdown(f'## Compare time calculation between efficient and griddy methods'))
         df_time_compare,chosen_indexes,number_of_changes_c_results,max_p_value_c= self.compare_methods(max_intervals=max_number_of_changes,parallel=True)
 
-        # save values to history
-        columns = ['atricle','original p_value','better group survival','delta tested','max intervals tries',' k rejection on interval','alpha','p_value rejection','greedy algo disagree with efficient algo on interval','the p_value when disagreement','link']
-        # df_final = pd.DataFrame(columns=columns)
-        if os.path.isfile('reports/report.csv'):
-            df_final = pd.read_csv('reports/report.csv')
-            df_final = df_final.drop(columns='Unnamed: 0')
-        else:
-            df_final = pd.DataFrame(columns=columns)
-        df_temp = pd.DataFrame([[atricle,round(p_value,4),better_group,delta,max_number_of_changes,number_of_changes_results,alpha,max_p_value,number_of_changes_c_results,max_p_value_c,link]],columns=columns) 
-        df_final = df_final.append(df_temp)
-        df_final.to_csv('reports/report.csv')
-
-        # save report
-        time.sleep(1)
-        os.system(f"jupyter nbconvert Log_Rank_Stability_V1.ipynb --output reports/report_{report_name} --no-input --to webpdf --allow-chromium-download") 
+        if save_report:
+            # save values to history
+            columns = ['atricle','cites','original p_value','better group survival','delta tested','max intervals tries',' k rejection on interval','alpha','p_value rejection','greedy algo disagree with efficient algo on interval','the p_value when disagreement','link']
+            # df_final = pd.DataFrame(columns=columns)
+            if os.path.isfile('reports/report.csv'):
+                df_final = pd.read_csv('reports/report.csv')
+                df_final = df_final.drop(columns='Unnamed: 0')
+            else:
+                df_final = pd.DataFrame(columns=columns)
+            df_temp = pd.DataFrame([[atricle,cites,round(p_value,4),better_group,delta,max_number_of_changes,number_of_changes_results,alpha,max_p_value,number_of_changes_c_results,max_p_value_c,link]],columns=columns) 
+            df_final = df_final.append(df_temp)
+            df_final.to_csv('reports/report.csv')
+            # save report
+            os.system(f"jupyter nbconvert Log_Rank_Stability_V1.ipynb --output reports/report_{report_name} --no-input --to webpdf --allow-chromium-download") 
